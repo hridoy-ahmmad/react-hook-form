@@ -47,14 +47,26 @@ export default function Home() {
         <div>
           <label className="block mb-2 font-medium">Password</label>
           <input
-            {...register('password', { required: true })}
-            aria-invalid={errors.password ? 'true' : 'false'}
             type="password"
             placeholder="Enter your password"
             className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/,
+                message:
+                  "Password must contain uppercase, lowercase, number and special character",
+              },
+            })}
           />
-          {errors.password?.type === 'required' && (
-            <p role="alert" className="text-red-500"> - Password is required*</p>
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
@@ -67,9 +79,16 @@ export default function Home() {
             placeholder="Confirm your password"
             className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
-           {errors.confirmPassword?.type === 'required' && (
+          {errors.confirmPassword?.type === 'required' && (
             <p role="alert" className="text-red-500"> Please Re-type your password</p>
           )}
+        </div>
+        <div className="flex flex-col gap-1">
+          <label>Select your role:</label>
+          <select {...register('role', { required: true })}>
+            <option value={'attende'}>attende</option>
+            <option value={'Organizer'}>Organizer</option>
+          </select>
         </div>
 
         <button
