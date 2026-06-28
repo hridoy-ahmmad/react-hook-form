@@ -1,13 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 
 export default function Home() {
   const { register, handleSubmit, formState: { errors }, } = useForm()
+  const [passError, setPassError] = useState('')
 
   const onSubmit = data => {
+    if (data.password !== data.confirmPassword) {
+      setPassError('Password doesnt match')
+      return;
+    }
+    setPassError('')
     console.log(data);
+
+
   }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -82,6 +91,7 @@ export default function Home() {
           {errors.confirmPassword?.type === 'required' && (
             <p role="alert" className="text-red-500"> Please Re-type your password</p>
           )}
+          <p>{passError}</p>
         </div>
         <div className="flex flex-col gap-1">
           <label>Select your role:</label>
