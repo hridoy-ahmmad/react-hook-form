@@ -5,17 +5,11 @@ import { useForm } from "react-hook-form";
 
 
 export default function Home() {
-  const { register, handleSubmit, formState: { errors }, } = useForm()
-  const [passError, setPassError] = useState('')
-
+  const { register, handleSubmit, formState: { errors }, watch } = useForm()
+  const password = watch('password')
   const onSubmit = data => {
-    if (data.password !== data.confirmPassword) {
-      setPassError('Password doesnt match')
-      return;
-    }
-    setPassError('')
-    console.log(data);
 
+    console.log(data);
 
   }
   return (
@@ -82,16 +76,25 @@ export default function Home() {
         <div>
           <label className="block mb-2 font-medium">Confirm Password</label>
           <input
-            {...register('confirmPassword', { required: true })}
+            {...register('confirmPassword', {
+              required:'Please Re-type your password',
+              validate: value => {
+               return value == password || 'password mismatch'
+              }
+
+            })}
             aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+
             type="password"
             placeholder="Confirm your password"
             className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {errors.confirmPassword?.type === 'required' && (
-            <p role="alert" className="text-red-500"> Please Re-type your password</p>
+          {errors.confirmPassword && (
+            <p className="text-red-500">
+              {errors.confirmPassword.message}
+            </p>
           )}
-          <p>{passError}</p>
+
         </div>
         <div className="flex flex-col gap-1">
           <label>Select your role:</label>
